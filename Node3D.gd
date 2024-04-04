@@ -10,11 +10,28 @@ const EARTH_R = 6300
 
 # masses in earthmasses
 const SUN_M = 333000
+const EARTH_M = 5.972e24
+
+# distance
+# Astronomische einheit AE in Km,
+const AE = 149600000
+
 
 # metrics in godot scale
+const SCALE_FACTOR = 0.00071804003791251400178073929402303
 # earth has 0.9% the size of the sun
 const SUN_R_INSCALE = 500
-const EARTH_R_INSCALE = 4.5
+const EARTH_R_INSCALE = EARTH_R * SCALE_FACTOR
+
+# distance
+const GD_AE = AE * SCALE_FACTOR
+
+# mass
+const GD_Earth_M = EARTH_M * SCALE_FACTOR
+const GD_SUN_M = GD_Earth_M * 333000
+
+# hillsphere sonne erde
+const hillsphere_sun_earth = GD_AE * pow((GD_Earth_M / (3 * GD_SUN_M)), 1/3)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
