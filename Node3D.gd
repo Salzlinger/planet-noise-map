@@ -33,9 +33,35 @@ const GD_SUN_M = GD_Earth_M * 333000
 # hillsphere sonne erde
 const hillsphere_sun_earth = GD_AE * pow((GD_Earth_M / (3 * GD_SUN_M)), 1/3)
 
+func mean_density(body_mass, body_radius):
+	var volume = (4.0 / 3.0) * PI * pow(body_radius, 3)
+	var density = body_mass / volume
+	return density
+	
+func calculate_roche_limit(primary_radius: float, primary_density: float, secondary_density: float, is_solid: bool) -> float:
+	var roche_limit: float
+	if is_solid:
+		# Für starre (feste) Körper
+		roche_limit = 1.26 * primary_radius * pow(primary_density / secondary_density, 1/3)
+	else:
+		# Für flüssige Körper
+		roche_limit = 2.44 * primary_radius * pow(primary_density / secondary_density, 1/3)
+	return roche_limit
+
+func calculate_hillsphere(satelite_radius: float, primary_mass: float, secondary_mass: float) -> float:
+	return satelite_radius * pow((secondary_mass / (3 * primary_mass)), 1/3)
+
+	
+var earth_density = mean_density(GD_Earth_M ,EARTH_R_INSCALE)
+var sun_density = mean_density(GD_SUN_M, SUN_R_INSCALE)
+
+var min_satelite_r = calculate_roche_limit(SUN_R_INSCALE, sun_density, earth_density, true)
+var max_satelite_distance = calculate_hillsphere(min_satelite_r, GD_SUN_M, GD_Earth_M)
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	print(max_satelite_distance)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
