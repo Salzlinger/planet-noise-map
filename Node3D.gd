@@ -8,9 +8,9 @@ extends Node3D
 const SUN_R = 700000
 const EARTH_R = 6300
 
-# masses in earthmasses
-const SUN_M = 333000
-const EARTH_M = 5.972e24
+
+const SUN_M = 333000 # Sun's mass in earthmasses
+const EARTH_M = 5.972e24 # Earth's mass in kilograms
 
 # distance
 # Astronomische einheit AE in Km,
@@ -20,7 +20,7 @@ const AE = 149600000
 # metrics in godot scale
 const SCALE_FACTOR = 0.00071804003791251400178073929402303
 # earth has 0.9% the size of the sun
-const SUN_R_INSCALE = 500
+const SUN_R_INSCALE = SUN_R * SCALE_FACTOR
 const EARTH_R_INSCALE = EARTH_R * SCALE_FACTOR
 
 # distance
@@ -28,7 +28,8 @@ const GD_AE = AE * SCALE_FACTOR
 
 # mass
 const GD_Earth_M = EARTH_M * SCALE_FACTOR
-const GD_SUN_M = GD_Earth_M * 333000
+# in Km
+const GD_SUN_M = GD_Earth_M * SUN_M
 
 # hillsphere sonne erde
 const hillsphere_sun_earth = GD_AE * pow((GD_Earth_M / (3 * GD_SUN_M)), 1/3)
@@ -49,19 +50,22 @@ func calculate_roche_limit(primary_radius: float, primary_density: float, second
 	return roche_limit
 
 func calculate_hillsphere(satelite_radius: float, primary_mass: float, secondary_mass: float) -> float:
+	var test = secondary_mass / (3 * primary_mass)
+	print(test)
 	return satelite_radius * pow((secondary_mass / (3 * primary_mass)), 1/3)
 
 	
-var earth_density = mean_density(GD_Earth_M ,EARTH_R_INSCALE)
-var sun_density = mean_density(GD_SUN_M, SUN_R_INSCALE)
+var earth_density = mean_density(EARTH_M ,EARTH_R)
+var sun_density = mean_density(SUN_M * EARTH_M, SUN_R)
 
-var min_satelite_r = calculate_roche_limit(SUN_R_INSCALE, sun_density, earth_density, true)
-var max_satelite_distance = calculate_hillsphere(min_satelite_r, GD_SUN_M, GD_Earth_M)
+var min_satelite_r = calculate_roche_limit(SUN_R, sun_density, earth_density, true)
+var max_satelite_distance = calculate_hillsphere(min_satelite_r, SUN_M * EARTH_M, EARTH_M)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print(max_satelite_distance)
+	print("min_satelite_r ", min_satelite_r * SCALE_FACTOR)
+	print("max_satelite_distance ", max_satelite_distance * SCALE_FACTOR)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
