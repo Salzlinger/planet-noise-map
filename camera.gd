@@ -4,7 +4,6 @@ class_name FreeLookCamera extends Camera3D
 const SHIFT_MULTIPLIER = 2.5
 const ALT_MULTIPLIER = 1.0 / SHIFT_MULTIPLIER
 
-
 @export_range(0.0, 1.0) var sensitivity: float = 0.25
 
 # Mouse state
@@ -16,7 +15,7 @@ var _direction = Vector3(0.0, 0.0, 0.0)
 var _velocity = Vector3(0.0, 0.0, 0.0)
 var _acceleration = 30
 var _deceleration = -10
-#initial speed
+# Initial speed
 var _vel_multiplier = 150
 
 # Keyboard state
@@ -28,6 +27,20 @@ var _q = false
 var _e = false
 var _shift = false
 var _alt = false
+
+# Reference to the Label node
+var _position_label: Label
+
+func _ready():
+	# Find the label node in the scene
+	_position_label = get_node("/root/Main/CanvasLayer/Label") # Adjust the path as necessary
+	
+	# Ensure the node is found
+	if _position_label == null:
+		push_error("Position label not found!")
+	else:
+		# Connect the process signal to update the label
+		set_process(true)
 
 func _input(event):
 	# Receives mouse motion
@@ -68,6 +81,7 @@ func _input(event):
 func _process(delta):
 	_update_mouselook()
 	_update_movement(delta)
+	_update_label()
 
 # Updates camera movement
 func _update_movement(delta):
@@ -79,7 +93,7 @@ func _update_movement(delta):
 	)
 	
 	# Computes the change in velocity due to desired direction and "drag"
-	# The "drag" is a constant acceleration on the camera to bring it's velocity to 0
+	# The "drag" is a constant acceleration on the camera to bring its velocity to 0
 	var offset = _direction.normalized() * _acceleration * _vel_multiplier * delta \
 		+ _velocity.normalized() * _deceleration * _vel_multiplier * delta
 	
@@ -115,3 +129,8 @@ func _update_mouselook():
 	
 		rotate_y(deg_to_rad(-yaw))
 		rotate_object_local(Vector3(1,0,0), deg_to_rad(-pitch))
+
+# Updates the label with the camera's position
+func _update_label():
+	if _position_label:
+		_position_label.text = "Position: " + str(global_transform.origin)
