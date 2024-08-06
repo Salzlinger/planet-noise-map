@@ -1,0 +1,16 @@
+[gd_scene load_steps=5 format=3 uid="uid://el4r5whu6o3d"]
+
+[ext_resource type="Texture2D" uid="uid://cn8mu7dj8r0s1" path="res://bg_space_seamless.png" id="1_vyala"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_rb0rj"]
+panorama = ExtResource("1_vyala")
+
+[sub_resource type="Sky" id="Sky_unssm"]
+sky_material = SubResource("PanoramaSkyMaterial_rb0rj")
+
+[sub_resource type="Environment" id="Environment_gcf2c"]
+background_mode = 2
+sky = SubResource("Sky_unssm")
+
+[node name="WorldEnvironment" type="WorldEnvironment"]
+environment = SubResource("Environment_gcf2c")

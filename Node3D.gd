@@ -131,26 +131,42 @@ func generate_number(mittelwert: float, standardabweichung: float, untergrenze: 
 	
 func create_star():
 	print("SUN_R_INSCALE", SUN_R_INSCALE)
-	var star_diameter = SUN_R_INSCALE * 2 * VISABILITY_SCALEING_FACTOR
+	#var star_diameter = SUN_R_INSCALE * 2 * VISABILITY_SCALEING_FACTOR
+	var star_diameter = 0
 	print("star_diameter", star_diameter)
 	var star = Star.instantiate()
+	var star_light = OmniLight3D.new()
+	star_light.omni_attenuation  = 2000  # Adjust this as needed
+	star_light.omni_range = 2000  # Assuming this is the correct property for range
+	star_light.position = Vector3(50, 50, 50)
+	star.add_child(star_light)
 	
 	star.scale = Vector3(star_diameter, star_diameter, star_diameter)
 	return star
 	
 func create_planet(orbit_radius, angle, planet_diameter):
 	var planet = Planet.instantiate()
+	var planet = SphereMesh.new()
 	print("planet_diameter", planet_diameter)
-	# Set size or scale if needed
+	Set size or scale if needed
 	planet.scale = Vector3(planet_diameter, planet_diameter, planet_diameter)
+	planet.radius = planet_diameter / 2
+	
 	
 	# Store orbit information in the planet instance
-	planet.orbit_radius = orbit_radius
-	planet.orbit_angle = angle
+	#planet.orbit_radius = orbit_radius
+	#planet.orbit_angle = angle
 	
 	# Set initial position
 	planet.position.x = orbit_radius * cos(angle)
 	planet.position.z = orbit_radius * sin(angle)
+	
+	var planet_light = OmniLight3D.new()
+	planet_light.omni_attenuation  = 2000  # Adjust this as needed
+	planet_light.omni_range = 2000  # Assuming this is the correct property for range
+	var light_offset = planet.position.x * 1.1  # Slightly larger than the star's radius
+	planet_light.position = Vector3(light_offset, 10, 10)  # You can adjust the offset direction as needed
+	planet.add_child(planet_light)
 	
 	return planet
 	
