@@ -81,7 +81,7 @@ animation = &"Rotation"
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_ji6rl"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_wujo7"]
-graph_offset = Vector2(-274.692, 86.5361)
+graph_offset = Vector2(-652.853, 64.5454)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_udpb3")
 nodes/Animation/position = Vector2(-20, 140)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_ji6rl")
@@ -89,7 +89,7 @@ nodes/TimeScale/position = Vector2(140, 140)
 node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
 
 [node name="PlanetTerrestrial" type="MeshInstance3D"]
-transform = Transform3D(383.943, 0, 112.195, 0, 400, 0, -112.195, 0, 383.943, 0, 0, 0)
+transform = Transform3D(379.536, 0, 126.303, 0, 400, 0, -126.303, 0, 379.536, 0, 0, 0)
 mesh = SubResource("SphereMesh_h4ifb")
 skeleton = NodePath(".")
 script = ExtResource("4_kus5l")
@@ -106,9 +106,6 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_37sus")
-}
 tree_root = SubResource("AnimationNodeBlendTree_wujo7")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 0.08

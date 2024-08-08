@@ -1,25 +1,20 @@
-[gd_scene load_steps=6 format=3 uid="uid://cw0frmhqx7gil"]
+[gd_scene load_steps=7 format=3 uid="uid://cw0frmhqx7gil"]
 
 [ext_resource type="Script" path="res://Node3D.gd" id="1_22wap"]
+[ext_resource type="Script" path="res://addons/naejimer_3d_planet_generator/scenes/planet_terrestrial.gd" id="1_bn8u5"]
 [ext_resource type="PackedScene" uid="uid://c1lxtdgeggnej" path="res://addons/naejimer_3d_planet_generator/scenes/star.tscn" id="2_isvhs"]
 [ext_resource type="PackedScene" uid="uid://yo6lqoksa53k" path="res://addons/naejimer_3d_planet_generator/scenes/planet_terrestrial.tscn" id="3_jptm1"]
 [ext_resource type="Script" path="res://camera.gd" id="4_3xral"]
-
-[sub_resource type="Environment" id="Environment_u2o8t"]
-background_mode = 2
+[ext_resource type="PackedScene" uid="uid://el4r5whu6o3d" path="res://world_environment_backup.tscn" id="6_hw3rv"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_bn8u5")
 
 [node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -849.957)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -840.93)
 script = ExtResource("1_22wap")
 Star = ExtResource("2_isvhs")
 Planet = ExtResource("3_jptm1")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 275.8, 0)
-light_energy = 0.0
-sky_mode = 1
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 565.688)
@@ -42,7 +37,9 @@ text = "spawn Star"
 offset_right = 8.0
 offset_bottom = 8.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_u2o8t")
+[node name="WorldEnvironment" parent="." instance=ExtResource("6_hw3rv")]
+
+[node name="PlanetTerrestrial" parent="." instance=ExtResource("3_jptm1")]
+transform = Transform3D(306.423, 0, 257.109, 0, 400, 0, -257.109, 0, 306.423, 4.35748, 22.0327, 8.69847)
 
 [connection signal="pressed" from="CanvasLayer/Button" to="Node3D" method="_on_button_pressed"]
