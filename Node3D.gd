@@ -103,17 +103,16 @@ func _ready():
 func _process(delta):
 	for planet in planets:
 		# Update the orbit angle
-		var angular_velocity = 0.1  # Adjust this value as needed
+		var angular_velocity = 0.01  # Adjust this value as needed
 		planet.orbit_angle += angular_velocity * delta
 		
 		var posX = planet.orbit_radius * cos(planet.orbit_angle)
 		var posY = planet.orbit_radius * sin(planet.orbit_angle)
-		#print("posX", posX)
-		#print("posX", posY)
+		print("posX", posX)
+		print("posX", posY)
 		
 		# Update the planet's position
-		#planet.position.x = posX
-		#planet.position.z = posY
+		planet.position = Vector3(posX, planet.position.y, posY)
 	
 func normaly_distributed_random_numbers(mittelwert: float, standardabweichung: float, n: int) -> float:
 	var summe = 0.0
@@ -151,13 +150,12 @@ func create_planet(orbit_radius, angle, planet_diameter):
 	
 	
 	# Store orbit information in the planet instance
-	#planet.orbit_radius = orbit_radius
-	#planet.orbit_angle = angle
+	planet.orbit_radius = orbit_radius
+	planet.orbit_angle = angle
 	
 	# Set initial position
 	planet.position.x = orbit_radius * cos(angle)
 	planet.position.z = orbit_radius * sin(angle)
-	
 	
 	return planet
 	
