@@ -17,6 +17,8 @@ const STAR_MASS_MIN = SUN_M * 0.07
 const STAR_MASS_AVARAGE = SUN_M * 0.5
 const STAR_MASS_MEDIAN = SUN_M * 0.2
 
+const SUN_LUMINOSITY = 3.828e26
+
 # distance
 # Astronomische einheit AE in Km,
 const AU = 149600000
@@ -35,6 +37,7 @@ const EXO_SIZE_MAX = SUN_R_INSCALE / 2
 const EXO_SIZE_MIN = EARTH_R_INSCALE * 0.5
 const EXO_SIZE_MEDIAN = EARTH_R_INSCALE * 10
 
+const GD_SUN_LUMINOSITY = SUN_LUMINOSITY * SCALE_FACTOR
 
 # distance
 const GD_AU = AU * SCALE_FACTOR
@@ -76,6 +79,17 @@ func calculate_hillsphere(satelite_radius: float, primary_mass: float, secondary
 	var test = secondary_mass / (3 * primary_mass)
 	print(test)
 	return satelite_radius * pow((secondary_mass / (3 * primary_mass)), 1/3)
+	
+# zone in witch a planet can evolve life
+func calculate_goldilocks_zone(star_radius: float, star_surface_temperature) -> Array:
+	# calulate Luminosity with Stefan-Bolzmann Law
+	var stefan_bolzmann_constant = 5.67e-8
+	var luminosity = 4 * PI * pow(star_radius, 2) * stefan_bolzmann_constant * pow(star_surface_temperature, 4)
+	var inner_edge = sqrt(luminosity / (1.1 * SUN_LUMINOSITY))
+	var outer_edge = sqrt(luminosity / (0.53 * SUN_LUMINOSITY))
+	
+	return [inner_edge, outer_edge]
+	
 
 	
 var earth_density = mean_density(EARTH_M ,EARTH_R)
@@ -108,8 +122,8 @@ func _process(delta):
 		
 		var posX = planet.orbit_radius * cos(planet.orbit_angle)
 		var posY = planet.orbit_radius * sin(planet.orbit_angle)
-		print("posX", posX)
-		print("posX", posY)
+		#print("posX", posX)
+		#print("posX", posY)
 		
 		# Update the planet's position
 		planet.position = Vector3(posX, planet.position.y, posY)
@@ -139,6 +153,9 @@ func create_star():
 	add_child(star_light)
 	
 	star.scale = Vector3(star_diameter, star_diameter, star_diameter)
+	star.position.x = 0
+	star.position.y = 0
+	star.position.z = 0
 	return star
 	
 func create_planet(orbit_radius, angle, planet_diameter):
@@ -168,6 +185,13 @@ func create_star_system():
 	print("creating star system")
 	var star = create_star()
 	add_child(star)
+	var star_temperature = int(generate_number(5500, 500, 3500, 7000))
+	print("star_temperatiure:", star_temperature)
+	print("SUN_R", SUN_R)
+	var terrestial_zone = calculate_goldilocks_zone(SUN_R * 1000, star_temperature)
+	print("terrestial_zone")
+	print(terrestial_zone[0])
+	print(terrestial_zone[1])
 	# mittelwert: 3, standardabweichung: 2, untergrenze: 0, obergrenze: 12
 	var system_body_number = int(generate_number(3, 2, 0, 12))
 	print(system_body_number)
