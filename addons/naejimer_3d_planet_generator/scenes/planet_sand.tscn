@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://dbexddi1rwbt4"]
+[gd_scene load_steps=14 format=3 uid="uid://dbexddi1rwbt4"]
 
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/body.gdshader" id="1_xf64t"]
 [ext_resource type="Texture2D" uid="uid://6maxob4srf50" path="res://addons/naejimer_3d_planet_generator/noises/planet_sand.tres" id="2_lpkdi"]
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/atmosphere.gdshader" id="3_gd12t"]
+[ext_resource type="Script" path="res://addons/naejimer_3d_planet_generator/scenes/planet_sand.gd" id="3_ti1uc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cr8r6"]
 render_priority = 0
@@ -77,9 +78,10 @@ nodes/TimeScale/position = Vector2(140, 140)
 node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
 
 [node name="PlanetSand" type="MeshInstance3D"]
-transform = Transform3D(379.79, 0, 12.6299, 0, 380, 0, -12.6299, 0, 379.79, 0, 0, 0)
+transform = Transform3D(378.956, 0, 28.1493, 0, 380, 0, -28.1493, 0, 378.956, 0, 0, 0)
 mesh = SubResource("SphereMesh_31s4g")
 skeleton = NodePath(".")
+script = ExtResource("3_ti1uc")
 
 [node name="Atmosphere" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.03, 0, 0, 0, 1.03, 0, 0, 0, 1.03, 0, 0, 0)
@@ -93,9 +95,6 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_37sus")
-}
 tree_root = SubResource("AnimationNodeBlendTree_wujo7")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 0.08

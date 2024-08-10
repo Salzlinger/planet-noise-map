@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://biy37ccrqck53"]
+[gd_scene load_steps=16 format=3 uid="uid://biy37ccrqck53"]
 
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/clouds.gdshader" id="1_nrj4t"]
 [ext_resource type="Texture2D" uid="uid://dubbc0h804fot" path="res://addons/naejimer_3d_planet_generator/noises/planet_ice.tres" id="2_83j0s"]
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/body.gdshader" id="3_twxga"]
+[ext_resource type="Script" path="res://addons/naejimer_3d_planet_generator/scenes/planet_ice.gd" id="4_2hw24"]
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/atmosphere.gdshader" id="4_t8w63"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xtehg"]
@@ -88,9 +89,10 @@ nodes/TimeScale/position = Vector2(140, 140)
 node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
 
 [node name="PlanetIce" type="MeshInstance3D"]
-transform = Transform3D(376.598, 0, 50.7287, 0, 380, 0, -50.7287, 0, 376.598, 0, 0, 0)
+transform = Transform3D(-215.374, 0, 313.071, 0, 380, 0, -313.071, 0, -215.374, 0, 0, 0)
 mesh = SubResource("SphereMesh_5tvr0")
 skeleton = NodePath(".")
+script = ExtResource("4_2hw24")
 
 [node name="Atmosphere" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.03, 0, 0, 0, 1.03, 0, 0, 0, 1.03, 0, 0, 0)
@@ -104,9 +106,6 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_37sus")
-}
 tree_root = SubResource("AnimationNodeBlendTree_wujo7")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 0.08

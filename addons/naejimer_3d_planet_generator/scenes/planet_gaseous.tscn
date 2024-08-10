@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://c1ml4yvlgnbbv"]
+[gd_scene load_steps=14 format=3 uid="uid://c1ml4yvlgnbbv"]
 
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/body.gdshader" id="1_h1bdw"]
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/atmosphere.gdshader" id="2_4iyha"]
 [ext_resource type="Texture2D" uid="uid://d1rfky6kyewv1" path="res://addons/naejimer_3d_planet_generator/noises/planet_gaseous.tres" id="2_4ugaj"]
+[ext_resource type="Script" path="res://addons/naejimer_3d_planet_generator/scenes/planet_gaseous.gd" id="3_ctcod"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3sgxv"]
 render_priority = 0
@@ -77,8 +78,9 @@ nodes/TimeScale/position = Vector2(140, 140)
 node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
 
 [node name="PlanetGaseous" type="MeshInstance3D"]
-transform = Transform3D(782.459, 0, 166.604, 0, 800, 0, -166.604, 0, 782.459, 0, 0, 0)
+transform = Transform3D(794.748, 0, 91.5118, 0, 800, 0, -91.5118, 0, 794.748, 0, 0, 0)
 mesh = SubResource("SphereMesh_mt6w6")
+script = ExtResource("3_ctcod")
 
 [node name="Atmosphere" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.04, 0, 0, 0, 1.04, 0, 0, 0, 1.04, 0, 0, 0)
@@ -91,9 +93,6 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_vymfv")
-}
 tree_root = SubResource("AnimationNodeBlendTree_fm5i7")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 0.1

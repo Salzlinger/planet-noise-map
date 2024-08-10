@@ -1,7 +1,15 @@
 extends Node3D
 
 @export var Star: PackedScene
-@export var Planet: PackedScene
+@export var Terrestrial: PackedScene
+@export var Gaseous: PackedScene
+@export var Lava: PackedScene
+@export var Ice: PackedScene
+@export var No_Atmosphere: PackedScene
+@export var Sand: PackedScene
+
+var PLANET_DICT = {}
+
 
 # metrics real scale
 # size in Km
@@ -108,6 +116,16 @@ func _ready():
 	print("ABOVE EXO_SIZE_MEDIAN: ", EXO_SIZE_MEDIAN)
 	print("ABOVE EARTH_R_INSCALE: ", EARTH_R_INSCALE)
 	print("ABOVE SUN_R_INSCALE: ", SUN_R_INSCALE)
+	
+	PLANET_DICT = {
+		"star": Star,
+		"terrestrial": Terrestrial,
+		"gaseous": Gaseous,
+		"lava": Lava,
+		"ice": Ice,
+		"no_atmosphere": No_Atmosphere,
+		"sand": Sand
+	}
 
 		
 
@@ -158,8 +176,24 @@ func create_star():
 	star.position.z = 0
 	return star
 	
-func create_planet(orbit_radius, angle, planet_diameter):
-	var planet = Planet.instantiate()
+func create_planet(orbit_radius, angle, planet_diameter, terrestial_zone):
+	for planet in PLANET_DICT:
+		print(PLANET_DICT[planet])
+	var planet_type = ""
+	var planet_keys = []
+	if (orbit_radius >= terrestial_zone[0] * SCALE_FACTOR && orbit_radius <= terrestial_zone[1] * SCALE_FACTOR):
+		planet_keys = PLANET_DICT.keys()
+		planet_type = planet_keys[randf_range(1, planet_keys.size() - 1)]
+	else:
+		for key in PLANET_DICT.keys():
+			if PLANET_DICT[key] != Terrestrial:
+				planet_keys.append(key)
+				
+		planet_type = planet_keys[randf_range(1, planet_keys.size() - 1)]
+		
+	print("planet_type", planet_type)
+	print("planet Object",PLANET_DICT[planet_type])
+	var planet = PLANET_DICT[planet_type].instantiate()
 	print("planet_diameter", planet_diameter)
 	#Set size or scale if needed
 	planet.scale = Vector3(planet_diameter, planet_diameter, planet_diameter)
@@ -211,10 +245,11 @@ func create_star_system():
 		var rochelimit_parent_star = 	calculate_roche_limit(SUN_R_INSCALE, star_mean_density, exo_mean_density, true)
 		print("rochelimit_parent_star: ", rochelimit_parent_star)
 		var orbit_radius = get_planet_orbit(star.scale.x, rochelimit_parent_star)
+		
 		print("orbit: ", orbit_radius)
 		var initial_angle = randf_range(0, 2 * PI)
 		# Create planet with orbit information
-		var planet = create_planet(orbit_radius, initial_angle, exo_diameter)
+		var planet = create_planet(orbit_radius, initial_angle, exo_diameter, terrestial_zone)
 		planets.append(planet)  # Add the planet to the list for tracking
 		add_child(planet)
 

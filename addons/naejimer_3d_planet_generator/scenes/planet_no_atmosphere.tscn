@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://tnvbntvduo2b"]
+[gd_scene load_steps=11 format=3 uid="uid://tnvbntvduo2b"]
 
 [ext_resource type="Shader" path="res://addons/naejimer_3d_planet_generator/shaders/body.gdshader" id="1_44m2i"]
 [ext_resource type="Texture2D" uid="uid://bq33q81jxrx46" path="res://addons/naejimer_3d_planet_generator/noises/planet_no_atmosphere.tres" id="2_36jis"]
+[ext_resource type="Script" path="res://addons/naejimer_3d_planet_generator/scenes/planet_no_atmosphere.gd" id="3_g7by2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l4rno"]
 render_priority = 0
@@ -62,8 +63,9 @@ nodes/TimeScale/position = Vector2(140, 140)
 node_connections = [&"TimeScale", 0, &"Animation", &"output", 0, &"TimeScale"]
 
 [node name="PlanetNoAtmosphere" type="MeshInstance3D"]
-transform = Transform3D(63.1571, 0, 189.767, 0, 200, 0, -189.767, 0, 63.1571, 0, 0, 0)
+transform = Transform3D(187.955, 0, 68.3615, 0, 200, 0, -68.3615, 0, 187.955, 0, 0, 0)
 mesh = SubResource("SphereMesh_wxhma")
+script = ExtResource("3_g7by2")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -71,9 +73,6 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_jtf4x")
-}
 tree_root = SubResource("AnimationNodeBlendTree_0eash")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 0.4

@@ -1,9 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://cw0frmhqx7gil"]
+[gd_scene load_steps=11 format=3 uid="uid://cw0frmhqx7gil"]
 
 [ext_resource type="Script" path="res://Node3D.gd" id="1_22wap"]
 [ext_resource type="PackedScene" uid="uid://c1lxtdgeggnej" path="res://addons/naejimer_3d_planet_generator/scenes/star.tscn" id="2_isvhs"]
 [ext_resource type="PackedScene" uid="uid://yo6lqoksa53k" path="res://addons/naejimer_3d_planet_generator/scenes/planet_terrestrial.tscn" id="3_jptm1"]
 [ext_resource type="Script" path="res://camera.gd" id="4_3xral"]
+[ext_resource type="PackedScene" uid="uid://c1ml4yvlgnbbv" path="res://addons/naejimer_3d_planet_generator/scenes/planet_gaseous.tscn" id="4_jx084"]
+[ext_resource type="PackedScene" uid="uid://dneumird5vcjw" path="res://addons/naejimer_3d_planet_generator/scenes/planet_lava.tscn" id="5_o2csg"]
+[ext_resource type="PackedScene" uid="uid://biy37ccrqck53" path="res://addons/naejimer_3d_planet_generator/scenes/planet_ice.tscn" id="6_cs31f"]
+[ext_resource type="PackedScene" uid="uid://tnvbntvduo2b" path="res://addons/naejimer_3d_planet_generator/scenes/planet_no_atmosphere.tscn" id="7_xgmmy"]
+[ext_resource type="PackedScene" uid="uid://dbexddi1rwbt4" path="res://addons/naejimer_3d_planet_generator/scenes/planet_sand.tscn" id="8_nufbo"]
 
 [sub_resource type="Environment" id="Environment_u2o8t"]
 background_mode = 2
@@ -14,7 +19,12 @@ background_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -849.957)
 script = ExtResource("1_22wap")
 Star = ExtResource("2_isvhs")
-Planet = ExtResource("3_jptm1")
+Terrestrial = ExtResource("3_jptm1")
+Gaseous = ExtResource("4_jx084")
+Lava = ExtResource("5_o2csg")
+Ice = ExtResource("6_cs31f")
+No_Atmosphere = ExtResource("7_xgmmy")
+Sand = ExtResource("8_nufbo")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 275.8, 0)
