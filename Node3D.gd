@@ -30,6 +30,8 @@ const SUN_LUMINOSITY = 3.828e26
 # distance
 # Astronomische einheit AE in Km,
 const AU = 149600000
+var STEFAN_BOLZMANN_CONSTANT = 5.67e-8
+
 
 
 # metrics in godot scale
@@ -89,14 +91,20 @@ func calculate_hillsphere(satelite_radius: float, primary_mass: float, secondary
 	return satelite_radius * pow((secondary_mass / (3 * primary_mass)), 1/3)
 	
 # zone in witch a planet can evolve life
-func calculate_goldilocks_zone(star_radius: float, star_surface_temperature) -> Array:
+func calculate_goldilocks_zone(star_radius: float, star_surface_temperature: float) -> Array:
 	# calulate Luminosity with Stefan-Bolzmann Law
-	var stefan_bolzmann_constant = 5.67e-8
-	var luminosity = 4 * PI * pow(star_radius, 2) * stefan_bolzmann_constant * pow(star_surface_temperature, 4)
+	
+	var luminosity = 4 * PI * pow(star_radius, 2) * STEFAN_BOLZMANN_CONSTANT * pow(star_surface_temperature, 4)
 	var inner_edge = sqrt(luminosity / (1.1 * SUN_LUMINOSITY))
 	var outer_edge = sqrt(luminosity / (0.53 * SUN_LUMINOSITY))
 	
 	return [inner_edge, outer_edge]
+	
+func calculate_frost_line(star_radius: float, star_surface_temperature: float, condensation_temperature: float) -> float:
+	# Calculating the distance of the frost line
+	var luminosity = 4 * PI * pow(star_radius, 2) * STEFAN_BOLZMANN_CONSTANT * pow(star_surface_temperature, 4)
+	var d = sqrt(luminosity / (16 * PI * STEFAN_BOLZMANN_CONSTANT * pow(condensation_temperature, 4)))
+	return d  # Distance in meters
 	
 
 	
@@ -176,27 +184,40 @@ func create_star():
 	star.position.z = 0
 	return star
 	
-func create_planet(orbit_radius, angle, planet_diameter, terrestial_zone):
+func create_planet(orbit_radius, angle, planet_diameter, terrestial_zone, frost_line):
 	for planet in PLANET_DICT:
 		print(PLANET_DICT[planet])
 	var planet_type = ""
 	var planet_keys = []
 	if (orbit_radius >= terrestial_zone[0] * SCALE_FACTOR && orbit_radius <= terrestial_zone[1] * SCALE_FACTOR):
-		planet_keys = PLANET_DICT.keys()
-		planet_type = planet_keys[randf_range(1, planet_keys.size() - 1)]
-	else:
+		for key in PLANET_DICT.keys():
+			if PLANET_DICT[key] != Ice:
+				planet_keys.append(key)
+		
+	elif (orbit_radius >= frost_line * SCALE_FACTOR):
 		for key in PLANET_DICT.keys():
 			if PLANET_DICT[key] != Terrestrial:
 				planet_keys.append(key)
+	
+	else:
+		for key in PLANET_DICT.keys():
+			if PLANET_DICT[key] != Terrestrial || Ice:
+				planet_keys.append(key)
 				
 		planet_type = planet_keys[randf_range(1, planet_keys.size() - 1)]
+		
+	
 		
 	print("planet_type", planet_type)
 	print("planet Object",PLANET_DICT[planet_type])
 	var planet = PLANET_DICT[planet_type].instantiate()
 	print("planet_diameter", planet_diameter)
 	#Set size or scale if needed
-	planet.scale = Vector3(planet_diameter, planet_diameter, planet_diameter)
+	if (planet_type != "gaseous"):
+		planet.scale = Vector3(planet_diameter, planet_diameter, planet_diameter)
+	else:
+		planet.scale = Vector3(planet_diameter * 10, planet_diameter * 10, planet_diameter * 10)
+	
 	planet.orbit_radius = planet_diameter / 2
 	
 	
@@ -216,7 +237,7 @@ func get_planet_orbit(star_diameter, rochelimit_parent_star):
 	return star_diameter * 0.5 + generate_number(EXO_DISTANCE_MEDIAN , 3 * GD_AU, rochelimit_parent_star ,EXO_DISTANCE_MAX)
 
 func create_star_system():
-	print("creating star system")
+	print("----------creating star system----------")
 	var star = create_star()
 	add_child(star)
 	var star_temperature = int(generate_number(5500, 500, 3500, 7000))
@@ -226,6 +247,8 @@ func create_star_system():
 	print("terrestial_zone")
 	print(terrestial_zone[0])
 	print(terrestial_zone[1])
+	var frost_line = calculate_frost_line(SUN_R * 1000, star_temperature, 150)
+	print("frost_line", frost_line)
 	# mittelwert: 3, standardabweichung: 2, untergrenze: 0, obergrenze: 12
 	var system_body_number = int(generate_number(3, 2, 0, 12))
 	print(system_body_number)
@@ -249,14 +272,17 @@ func create_star_system():
 		print("orbit: ", orbit_radius)
 		var initial_angle = randf_range(0, 2 * PI)
 		# Create planet with orbit information
-		var planet = create_planet(orbit_radius, initial_angle, exo_diameter, terrestial_zone)
+		var planet = create_planet(orbit_radius, initial_angle, exo_diameter, terrestial_zone, frost_line)
 		planets.append(planet)  # Add the planet to the list for tracking
 		add_child(planet)
+		
+	print("----------created star system----------")
 
 
 func _on_button_pressed():
 	print("button pressed")
 	create_star_system()
+	print("number of planets: ", planets.size())
 	for planet in planets:
 		print("PLANET POS: ", planet.get_index())
 		print("posX: ", planet.position.x)
